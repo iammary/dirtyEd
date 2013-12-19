@@ -1,19 +1,12 @@
 directory.Employee = Backbone.Model.extend({
-
-    urlRoot:"/profiles",
-
-    initialize:function () {
-        this.reports = new directory.EmployeeCollection();
-        this.reports.url = this.urlRoot + "/" + this.id + "/reports";
-    }
-
+    urlRoot:"/profiles"
 });
 
 directory.EmployeeCollection = Backbone.Collection.extend({
 
     model: directory.Employee,
-    comparator: function(item) {
-        return item.get('fullName').toLowerCase();
+    comparator: function(model) {
+        return model.get('fullName').toLowerCase();
     },
     url:"/profiles"
 

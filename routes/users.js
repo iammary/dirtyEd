@@ -225,7 +225,7 @@ module.exports = function(app, user) {
                                 photo: "$photo"
                             },
                             "field": {
-                                $push: "$field"
+                                $push: "$field.assignedValue"
                             }
                         }
                     }, {
@@ -244,7 +244,7 @@ module.exports = function(app, user) {
             } else {
                 user.Users.aggregate([{
                     $match: {
-                        isActive: true
+                        isActive: true,
                     }
                 }, {
                     $unwind: "$field"
@@ -262,7 +262,7 @@ module.exports = function(app, user) {
                             photo: "$photo"
                         },
                         "field": {
-                            $push: "$field"
+                            $push: "$field.assignedValue"
                         }
                     }
                 }, {
@@ -271,6 +271,7 @@ module.exports = function(app, user) {
                         "fullName": "$_id.fullName",
                         "photo": "$_id.photo",
                         "field": 1
+                        // "firstName": "$field.assignedValue  ",
                     }
                 }], function(error, doc) {
                     res.send(200, doc);

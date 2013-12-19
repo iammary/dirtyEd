@@ -194,15 +194,10 @@ directory.Router = Backbone.Router.extend({
     },
 
     home: function() {
-        // Since the home view never changes, we instantiate it and render it only once
-        if (!directory.homelView) {
-            directory.homelView = new directory.HomeView();
-            directory.homelView.render();
-        } else {
-            console.log('reusing home view');
-            directory.homelView.delegateEvents(); // delegate events when the view is recycled
-        }
-        this.$content.html(directory.homelView.el);
+        
+        directory.homeView = new directory.HomeView();
+
+        this.$content.html(directory.homeView.render().el);
         directory.shellView.selectMenuItem('home-menu');
     },
 

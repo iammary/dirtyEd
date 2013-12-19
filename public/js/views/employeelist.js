@@ -2,6 +2,8 @@ directory.EmployeeListView = Backbone.View.extend({
 
     tagName:'ul',
 
+    id: 'employeeList',
+
     className:'nav nav-list',
 
     initialize:function () {
@@ -31,7 +33,7 @@ directory.EmployeeListItemView = Backbone.View.extend({
     },
 
     render:function () {
-        console.log(this.model);
+        //console.log(this.model);
         this.$el.html(this.template(this.model.attributes));
         return this;
     }

@@ -34,3 +34,46 @@ body {
     font-style: italic;
     color: #999;
 }
+
+.profilepic {
+    float: left;
+    margin-right: 10px;
+    max-width: 50px;
+}
+
+.directory-list .profilepic {
+    width: 80px;
+    margin: 10px;
+}
+
+.directory-list ul li {
+    display: block;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+}
+.directory-list ul li:hover, .directory-list ul li a:hover {
+    background: #f9f9f9;
+    cursor: pointer;
+}
+
+.directory-list ul li:last-child {
+    border-bottom: none;
+}
+
+.directory-list ul li a {
+    overflow: hidden;
+}
+
+.directory-list .list-item {
+    font-size: 22px;
+    display: inline-block;
+    padding-top: 10px;
+    padding-left: 15px;
+}
+
+.directory-list .list-item span {
+    font-size: 16px;
+}
+#sortby {
+    margin: 15px;
+}
