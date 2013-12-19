@@ -493,6 +493,10 @@ directory.bfEditViewItemView = Backbone.View.extend({
 //    url: 'http://localhost:3000/custom-fields'
 // });
 
+function finisher(callback){
+
+}
+
 directory.CustFieldView = Backbone.View.extend({
 
     events: {
@@ -554,7 +558,9 @@ directory.CustFieldView = Backbone.View.extend({
             "<div style=\"vertical-align: top; display: block; margin-left: 0px;\" class=\"newval btn-group\">" +
             "     <input type=\"text\" class=\"form-control\" id=\"label\" placeholder=\"value\" name=\"value\" style=\"margin-bottom: 0px;\">" +
             "     <button style=\"text-align: right;\" class=\"btn remVal\"><i class=\"icon-minus\"></i>" +
-            "    </button>" +
+            "     </button>" +
+            //"     <label class=\"control-label help-inline\"for=\"\">" +
+            "     </label>" +
             "</div>");
     },
 
@@ -571,16 +577,42 @@ directory.CustFieldView = Backbone.View.extend({
             $("#addHider").css('display', 'none').css('visibility', 'hidden');
     },
 
-    submiter: function() {
+    submiter: function(x) {
         $("#info").css('display', 'none').css('visibility', 'hidden');
+        var errorFields;
         var isValid = true;
-        isValid = isValid & tz_err_inline("#lableParam", !$('#lableParam').val(), "Please fill up empty field.");
-        if (getIndexById($("#fieldTypeDDownId").val()).mult == 1)
-            isValid = isValid & tz_err_inline("#valxx", !$('#valxx').val(), "Please fill up empty field.");
-
+        var temp = false;
+        var flag = 0;
+        isValid = isValid && tz_err_inline("#lableParam", isNullOrWhiteSpace($('#lableParam').val()), "Please fill up empty field.");//check label 
+        if (getIndexById($("#fieldTypeDDownId").val()).mult == 1){
+            isValid = isValid && tz_err_inline("#valxx", isNullOrWhiteSpace($('#valxx').val()), "Please fill up empty field.");// check the first value
+           
+            console.log('more than 1');
+            $('#addValues').find("input[type='text']").each(function(i){
+                var chk = isNullOrWhiteSpace($(this).val());
+                temp = isNullOrWhiteSpace($(this).val()) || temp;
+                var r = $(this).find('input[type=text]')
+                console.log(i);
+                if(i>=0){// if multiple
+                    flag=1;
+                }
+            });
+        }
+        
+        var def_val = isValid && !temp;
+        if(flag ==1){
+            tz_err_inline('#valxx', !def_val, "Please fill up empty field.");// check the first value
+        }
+              
+        isValid = isValid && !temp;        
+            
+            
         if (isValid) {
             //PERFORM SAVE HERE
             this.submitForm();
+            $("#addValues").children().each(function() {//remove extra fields
+                $(this).remove();
+            });
 
             $("#addHider").css('display', 'none').css('visibility', 'hidden');
             $("#lableParam").val("");
@@ -598,6 +630,8 @@ directory.CustFieldView = Backbone.View.extend({
             $("#info").css('display', 'block').css('visibility', 'visible');
             //$("#error").html("Problems with the operation")
             //$("#error").css('display', 'block').css('visibility', 'visible');
+        }else{
+            console.log("isvalid is false. should not submit.");
         }
 
         return false;
@@ -660,7 +694,7 @@ directory.CustFieldView = Backbone.View.extend({
             data = {};
 
         var values = $("input[name='value']").map(function() {
-            return $(this).val();
+            return ($(this).val()).trim();
         }).get()
 
         data = {
@@ -679,7 +713,7 @@ directory.CustFieldView = Backbone.View.extend({
         var obj = {};
 
         $.map(array, function(value, index) {
-            obj[value['name']] = value['value'];
+            obj[value['name']] = value['value'].trim();
         });
         return obj;
     },

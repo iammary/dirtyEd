@@ -43,10 +43,12 @@ function tz_err(key, sel, val, msg) {
 function tz_err_inline(sel, val, msg) {
     var ret;
     if (val) {
+        console.log("val is true");
         $(sel).closest('.form-group').find('.help-inline').html(msg)
         $(sel).closest('.form-group').addClass('error');
         $(sel).closest('.form-group').find('label').attr('for', 'inputError');
     } else {
+        console.log("val is false");
         $(sel).closest('.form-group').find('.help-inline').html('')
         $(sel).closest('.form-group').removeClass('error');
         $(sel).closest('.form-group').find('label').attr('for', '');
