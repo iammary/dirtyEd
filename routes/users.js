@@ -56,12 +56,9 @@ module.exports = function(app, user) {
                     if (err) {
 
                     } else {
+                        console.log(employee);
                         if (employee) {
-                            var test = ' ';
-                            test = employee.field[0].assignedValue[0];
-                            console.log(test);
-                            res.send(200, employee);
-                            console.log(username + ' retrieved.');
+                            res.send(200, employee);                           
                         } else {
                             res.send(404);
                         }
@@ -105,11 +102,13 @@ module.exports = function(app, user) {
                     },
                     function(error, employee) {
                         if (err) {} else {
-                            var test = ' ';
-                            test = employee.field[0].assignedValue[0];
-                            console.log(test);
-                            res.send(200, employee);
-                            console.log(username + ' retrieved.');
+                            if(employee) {
+                                var test = ' ';
+                                test = employee.field[0].assignedValue[0];
+                                console.log(test);
+                                res.send(200, employee);
+                                console.log(username + ' retrieved.');
+                            }
                         }
                     });
             }
@@ -215,6 +214,9 @@ module.exports = function(app, user) {
                         $match: {
                             "field.objectID": {
                                 $in: [results[0], results[1], results[2], results[3]]
+                            },
+                            fullName: {
+                                $ne: 'Global Zeal Admin'
                             }
                         }
                     }, {
@@ -223,9 +225,6 @@ module.exports = function(app, user) {
                                 _id: "$_id",
                                 fullName: "$fullName",
                                 photo: "$photo"
-                            },
-                            "field": {
-                                $push: "$field.assignedValue"
                             }
                         }
                     }, {
@@ -244,7 +243,7 @@ module.exports = function(app, user) {
             } else {
                 user.Users.aggregate([{
                     $match: {
-                        isActive: true,
+                        isActive: true
                     }
                 }, {
                     $unwind: "$field"
@@ -252,6 +251,9 @@ module.exports = function(app, user) {
                     $match: {
                         "field.objectID": {
                             $in: [results[0], results[1], results[2], results[3]]
+                        },
+                        fullName: {
+                            $ne: 'Global Zeal Admin'
                         }
                     }
                 }, {

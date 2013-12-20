@@ -6,9 +6,10 @@ directory.HomeView = Backbone.View.extend({
         this.directoryListingView = new directory.EmployeeListView({model: this.directoryListing});
         this.directoryListing.fetch({ reset: true });
         this.directoryListing.on('reset', this.paginate, this);
-        this.perPage = 5;
+        this.perPage = 10;
         this.shownPageLink = 3;
-        this.Pages;
+        this.Pages = 0;
+        this.totalEmployees = 0;
         this.holder = '#employeeList';
         this.activateIndexClass ='';
         this.spanHolder = 'div.holder span a.';
@@ -50,12 +51,13 @@ directory.HomeView = Backbone.View.extend({
     },
 
     paginate: function(e) {
-        var prev = '<a class="prevlink prevnext"> Previous </a> ',
+        var prev = '<a href="#" class="prevlink prevnext" style="display: none"> Previous </a> ',
             next = '<a href="#"" class="lastlink prevnext"> Next </a>',
             appendThis = prev + '<span>',
             pages;
+            this.totalEmployees = $(this.holder + ' li').length;
             console.log(this.perPage);
-        pages = Math.ceil( $(this.holder + ' li').length / this.perPage );
+        pages = Math.ceil( this.totalEmployees / this.perPage );
         this.Pages = pages;
         for (var i = 1; i <= this.Pages; i++) {
             if(i == 1)
@@ -66,7 +68,7 @@ directory.HomeView = Backbone.View.extend({
                 appendThis += ' style="display:none;"';
             appendThis += '> ' + i + ' </a>';
         };
-        appendThis += '</span>' + next;
+        appendThis += '</span>' + next + '<br /> <p class="showing"> Showing <span class="shown"> ' + this.totalEmployees + ' </span> of ' + this.totalEmployees +'</p>';
         $('div.holder').html(appendThis);
         this.showHideList();
     },
@@ -134,25 +136,30 @@ directory.HomeView = Backbone.View.extend({
         $(this.spanHolder + this.activateIndexClass).removeAttr('href');
 
         if(parseInt($(this.spanHolder + 'active').text())==this.Pages) {
-            $(this.prevNextHolder + 'lastlink').removeAttr('href');
+            $(this.prevNextHolder + 'lastlink').hide();
         } else {
-            $(this.prevNextHolder + 'lastlink').attr('href','#');
+            $(this.prevNextHolder + 'lastlink').show();
         }
         if(parseInt($(this.spanHolder + 'active').text())==1) {
-            $(this.prevNextHolder + 'prevlink').removeAttr('href');
+            $(this.prevNextHolder + 'prevlink').hide();
         } else {
-            $(this.prevNextHolder + 'prevlink').attr('href','#');
+            $(this.prevNextHolder + 'prevlink').show();
         }
     },
 
     pageNow: function(e) {
         $(this.holder + ' li').hide();
+        var i;
         var activeIndex = $('.holder span a.active').text(),
             start = 1 + ((activeIndex -1) * this.perPage),
             end = start + this.perPage;
             console.log('start:' + start + ' end: ' + end);
-        for(var i = start; i<end; i++) {
+        for(i = start; i < end; i++) {
+            if(i > this.totalEmployees) {
+                break;
+            }
             $(this.holder + ' li:nth-child(' + i +')').toggle();
         }  
+        $('.shown').text(start + ' - ' + (i-1));
     }
 });
